@@ -1,13 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-Created on Wed Jun  2 21:16:35 2021
-
-@author: Ivan
-版權屬於「行銷搬進大程式」所有，若有疑問，可聯絡ivanyang0606@gmail.com
-
-Line Bot聊天機器人
-第三章 互動回傳功能
-推播push_message與回覆reply_message
+line Bot聊天機器人
+第一章 Line Bot申請與串接
+Line Bot機器人串接與測試
 """
 #載入LineBot所需要的套件
 from flask import Flask, request, abort
@@ -22,12 +17,14 @@ from linebot.models import *
 import re
 app = Flask(__name__)
 
-# 必須放上自己的Channel Access Token
-line_bot_api = LineBotApi('你自己的token')
-# 必須放上自己的Channel Secret
-handler = WebhookHandler('你自己的secret')
+import random
 
-line_bot_api.push_message('你自己的ID', TextSendMessage(text='你可以開始了'))
+# 必須放上自己的Channel Access Token
+line_bot_api = LineBotApi('QLdQ49iminM9vWWNHBX/lEXE5Y6Nufzu1YLPsQnRMXwy22aDO/XUeCzFOKsw5Y+REgpPVSZYdjTIdBkkb6YEoT63p4zfFehfRpwN7lbVD/Z6rCt3v/29KXxQkGfeER6NNfCcTamC5YSQiP2ZRehbngdB04t89/1O/w1cDnyilFU=')
+# 必須放上自己的Channel Secret
+handler = WebhookHandler('e21b7c4fcde587a113145986d76bd68d')
+
+line_bot_api.push_message('U41640217301124092e0eb4b6fd6bd49e', TextSendMessage(text='你可以開始了'))
 
 # 監聽所有來自 /callback 的 Post Request
 @app.route("/callback", methods=['POST'])
@@ -52,10 +49,14 @@ def callback():
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     message = text=event.message.text
-    if re.match('告訴我秘密',message):
-        line_bot_api.reply_message(event.reply_token,TextSendMessage('才不告訴你哩！'))
+    if re.match('抽獎開始',message):
+        line_bot_api.reply_message(event.reply_token,TextSendMessage('準備開獎囉!'))
+        
+        line_bot_api.reply_message(event.reply_token,TextSendMessage(random,randint(1,10)))
+
     else:
         line_bot_api.reply_message(event.reply_token, TextSendMessage(message))
+
 #主程式
 import os
 if __name__ == "__main__":
